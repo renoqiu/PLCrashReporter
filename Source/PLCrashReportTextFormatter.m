@@ -33,9 +33,23 @@
 
 #import "PLCrashReportTextFormatter.h"
 
+/**
+ * Sort PLCrashReportBinaryImageInfo instances by their starting address.
+ */
+static NSInteger binaryImageSort(id binary1, id binary2, void *context) {
+    uint64_t addr1 = [binary1 imageBaseAddress];
+    uint64_t addr2 = [binary2 imageBaseAddress];
+    
+    if (addr1 < addr2)
+        return NSOrderedAscending;
+    else if (addr1 > addr2)
+        return NSOrderedDescending;
+    else
+        return NSOrderedSame;
+}
+
 
 @interface PLCrashReportTextFormatter (PrivateAPI)
-NSInteger binaryImageSort(id binary1, id binary2, void *context);
 + (NSString *) formatStackFrame: (PLCrashReportStackFrameInfo *) frameInfo 
                      frameIndex: (NSUInteger) frameIndex
                          report: (PLCrashReport *) report;
@@ -485,21 +499,6 @@ NSInteger binaryImageSort(id binary1, id binary2, void *context);
             frameInfo.instructionPointer, 
             symName, 
             symOffset];
-}
-
-/**
- * Sort PLCrashReportBinaryImageInfo instances by their starting address.
- */
-NSInteger binaryImageSort(id binary1, id binary2, void *context) {
-    uint64_t addr1 = [binary1 imageBaseAddress];
-    uint64_t addr2 = [binary2 imageBaseAddress];
-    
-    if (addr1 < addr2)
-        return NSOrderedAscending;
-    else if (addr1 > addr2)
-        return NSOrderedDescending;
-    else
-        return NSOrderedSame;
 }
 
 @end
