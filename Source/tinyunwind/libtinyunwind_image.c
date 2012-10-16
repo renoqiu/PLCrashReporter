@@ -235,11 +235,14 @@ void tinyunw_async_list_remove_image_by_header (tinyunw_async_list_t *list, uint
        the list to be abstracted away from a single data type while violating
        module separate slightly by knowing what to do with a removed binary image.
        It's a fair tradeoff, given that the async list is useful elsewhere. */
+    tinyunw_async_list_setreading (list, true);
     while ((entry = tinyunw_async_list_next(list, entry)) != NULL) {
         if (((tinyunw_image_t *)entry->data)->header == header) {
-            tinyunw_async_list_remove(list, entry->data);
+			tinyunw_async_list_setreading (list, false);
             tinyunw_image_free(entry->data);
+            tinyunw_async_list_remove(list, entry->data);
             return;
         }
     }
+    tinyunw_async_list_setreading (list, false);
 }

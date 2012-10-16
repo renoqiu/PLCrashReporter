@@ -193,9 +193,10 @@ int tinyunw_unwind_find_info (tinyunw_image_t *image, uintptr_t ip, tinyunw_unwi
     return TINYUNW_ESUCCESS;
 }
 
+
 int tinyunw_unwind_update_state_from_info (tinyunw_image_t *image, tinyunw_unwind_info_t *info, tinyunw_context_t *context) {
     switch (info->encoding & UNWIND_X86_64_MODE_MASK) {
-        case UNWIND_X86_64_MODE_COMPATIBILITY:
+        case 0:// UNWIND_X86_64_MODE_COMPATIBILITY:
             /* We don't support the compatibility mode, and neither does Apple's
                libunwind implementation. Apparently, modern binaries use a zero
                encoding to mean "no unwind info for this function." */
